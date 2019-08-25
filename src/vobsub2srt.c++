@@ -107,6 +107,7 @@ int main(int argc, char **argv) {
   int y_threshold = 0;
   int min_width = 9;
   int min_height = 1;
+  int dpi = 70;
 
   {
     /************************************************************************************
@@ -127,6 +128,7 @@ int main(int argc, char **argv) {
       add_option("y-threshold", y_threshold, "Y (luminance) threshold below which colors treated as black (Default: 0)").
       add_option("min-width", min_width, "Minimum width in pixels to consider a subpicture for OCR (Default: 9)").
       add_option("min-height", min_height, "Minimum height in pixels to consider a subpicture for OCR (Default: 1)").
+      add_option("dpi", dpi, "DPI of the subtitle images (Default: 70)").
       add_unnamed(subname, "subname", "name of the subtitle files WITHOUT .idx/.sub ending! (REQUIRED)");
     if(not opts.parse_cmd(argc, argv) or subname.empty()) {
       return 1;
@@ -223,6 +225,11 @@ int main(int argc, char **argv) {
   }
   if(not blacklist.empty()) {
     tess_base_api.SetVariable("tessedit_char_blacklist", blacklist.c_str());
+  }
+  if (1) {
+    char dpi_string[255];
+    snprintf(dpi_string, 254, "%d", dpi);
+    tess_base_api.SetVariable("user_defined_dpi", dpi_string);
   }
 #else
   TessBaseAPI::SimpleInit(tess_path, tess_lang, tess_oem, false); // TODO params
