@@ -1,4 +1,12 @@
-vobsub2srt (0.0ubuntu1~1.gbpdb8f2d) UNRELEASED; urgency=low
+vobsub2srt (1.1) UNRELEASED; urgency=medium
+
+  * Set default tesseract-oem to 3 (OEM_DEFAULT)
+  * Get rid of truncation warnings when building Release
+  * Add --dpi option and feed that to tesseract to quash warning in version 4
+
+ -- Sammy Spets <bleep@bleep.bleep>  Fri, 19 Jul 2019 11:20:21 +0700
+
+vobsub2srt (0.0ubuntu1~1.gbpdb8f2d) unstable; urgency=low
 
   ** SNAPSHOT build @db8f2d14276aba886292eb13d48ac05ef1f34bcf **
 
