@@ -44,6 +44,7 @@ if(TESSERACT_DATA_PATH)
 endif()
 
 set(CMAKE_REQUIRED_INCLUDES ${Tesseract_INCLUDE_DIR})
+set(CMAKE_REQUIRED_FLAGS "-std=c++11")
 check_cxx_source_compiles(
   "#include \"tesseract/baseapi.h\"
    using namespace tesseract;

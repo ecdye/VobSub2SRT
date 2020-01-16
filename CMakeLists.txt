@@ -3,6 +3,7 @@ project(vobsub2srt)
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
+set(CMAKE_CXX_STANDARD 11)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(
