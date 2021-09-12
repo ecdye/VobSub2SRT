@@ -398,7 +398,7 @@ static char const *const iso639_3[] = {
   "zha",
   "zho",
   "zul" };
-static char const *const *const iso639_3_end = iso639_3 + sizeof(iso639_3)/sizeof(iso639_3[0]);
+// static char const *const *const iso639_3_end = iso639_3 + sizeof(iso639_3)/sizeof(iso639_3[0]);
 
 static bool compare(char const *lhs, char const *rhs) {
   return std::strcmp(lhs, rhs) < 0;
@@ -407,7 +407,7 @@ static bool compare(char const *lhs, char const *rhs) {
 }
 
 char const *iso639_1_to_639_3(char const *lang) {
-  assert(sizeof(iso639_1) == sizeof(iso639_3)); 
+  assert(sizeof(iso639_1) == sizeof(iso639_3));
   char const *const * i = std::lower_bound(iso639_1, iso639_1_end, lang, compare); // binary search
   if(i == iso639_1_end) {
     return 0x0;

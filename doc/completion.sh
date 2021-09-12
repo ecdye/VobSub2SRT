@@ -31,7 +31,7 @@ _vobsub2srt() {
             return 0
             ;;
         --lang|-l)
-            _get_first_arg 
+            _get_first_arg
             tmp=$( "$cmd" --langlist -- "$arg" 2>/dev/null | sed -E -e '/Languages:/d; s/^[[:digit:]]+: //;' )
             COMPREPLY=( $( compgen -W "$tmp" -- "$cur" ) )
             return 0
@@ -44,7 +44,7 @@ _vobsub2srt() {
 
     case $cur in
         -*)
-            COMPREPLY=( $( compgen -W '--dump-images --verbose --ifo --lang --langlist --tesseract-lang --tesseract-data --blacklist --y-threshold --min-width --min-height' -- "$cur" ) )
+            COMPREPLY=( $( compgen -W '--dump-images --verbose --ifo --lang --langlist --tesseract-lang --tesseract-data --blacklist --y-threshold --min-width --min-height --dpi --max-threads' -- "$cur" ) )
             ;;
         *)
             _filedir '(idx|IDX|sub|SUB)'

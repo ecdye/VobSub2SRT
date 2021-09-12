@@ -55,7 +55,7 @@ include(CheckCXXSourceCompiles)
 include(CheckCXXSourceRuns)
 
 set(CMAKE_C_FLAGS "-std=gnu99")
-set(CMAKE_CXX_FLAGS "-ansi -pedantic -Wall -Wextra -Wno-long-long -std=gnu++11")
+set(CMAKE_CXX_FLAGS "-DUSE_STD_NAMESPACE -std=gnu++11 -pedantic -Wall -Wextra -Wno-long-long")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mtune=native -march=native -DNDEBUG -fomit-frame-pointer -ffast-math") # TODO -Ofast GCC 4.6
 set(CMAKE_C_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
@@ -106,46 +106,3 @@ configure_file(
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-
-#### Package Generation
-execute_process (
-  COMMAND          /usr/bin/dpkg --print-architecture
-  OUTPUT_VARIABLE  CPACK_DEBIAN_PACKAGE_ARCHITECTURE
-  RESULT_VARIABLE  EXECUTE_RESULT
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  ERROR_QUIET
-)
-if(EXECUTE_RESULT)
-  message(STATUS "dpkg not found: No package generation.")
-else()
-  message(STATUS "Debian architecture: ${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
-  set(CPACK_GENERATOR "DEB")
-  set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
-  set(CPACK_PACKAGE_VERSION "${VOBSUB2SRT_VERSION}")
-  set(CPACK_PACKAGE_CONTACT "Rüdiger Sonderfeld <ruediger@c-plusplus.de>")
-  set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/ruediger/VobSub2SRT")
-  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Converts VobSub subtitles (.idx/.srt format) into .srt subtitles.")
-  set(CPACK_PACKAGE_DESCRIPTION "VobSub2SRT is a simple command line program to convert .idx / .sub subtitles\ninto .srt text subtitles by using OCR. It is based on code from the MPlayer\nproject - a really great movie player.\nTesseract is used as OCR software.")
-
-  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/debian/copyright")
-  set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.org")
-  set(CPACK_STRIP_FILES TRUE)
-
-  set(CPACK_DEBIAN_PACKAGE_SECTION "video")
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS libtesseract-dev)
-  set(CPACK_DEBIAN_PACKAGE_BUILD_DEPENDS libavutil-dev libtiff5-dev libtesseract-dev tesseract-ocr-eng cmake pkg-config)
-#  set(CPACK_DEBIAN_GIT_DCH TRUE)
-  set(CPACK_DEBIAN_UPDATE_CHANGELOG TRUE)
-  set(PPA_DEBIAN_VERSION "ppa1")
-
-  include(ppa_config.cmake OPTIONAL)
-
-  set(DPUT_HOST "ppa:ruediger-c-plusplus/vobsub2srt")
-
-  include(CPack)
-
-  if(ENABLE_PPA)
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "any") # can be build on any system
-    include(UploadPPA)
-  endif()
-endif()
