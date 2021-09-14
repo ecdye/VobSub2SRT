@@ -1,5 +1,4 @@
-#!/bin/sh
-# -*- mode:sh; coding:utf-8; -*-
+#!/usr/bin/env bash
 
 mkdir -p build
 cd build && cmake "$@" ..
