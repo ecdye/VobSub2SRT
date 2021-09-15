@@ -1,5 +1,6 @@
 /*
- *  This file is part of vobsub2srt
+ *  VobSub2SRT is a simple command line program to convert .idx/.sub subtitles
+ *  into .srt text subtitles by using OCR (tesseract). See README.md.
  *
  *  Copyright (C) 2010-2016 Rüdiger Sonderfeld <ruediger@c-plusplus.de>
  *
@@ -141,7 +142,7 @@ bool cmd_options::parse_cmd(int argc, char **argv) const {
           if (i + 1 >= argc or
               argv[i + 1][0] ==
                   '-') {  // Check if next argv is an option or argument
-            cerr << "option " << argv[i] << " is missing an argument\n";
+            cerr << "option " << argv[i] << " is missing an argument" << endl;
             exit = true;
             return false;
           }
@@ -155,7 +156,7 @@ bool cmd_options::parse_cmd(int argc, char **argv) const {
             if (*endptr != '\0') {
               cerr << "option " << argv[i]
                    << " expects a number as argument but got '" << argv[i]
-                   << "'\n";
+                   << "'" << endl;
               exit = true;
               return false;
             }
@@ -163,8 +164,8 @@ bool cmd_options::parse_cmd(int argc, char **argv) const {
           break;
         }
       }
-      if (not known_option) {
-        cerr << "ERROR: unknown option '" << argv[i] << "'\n";
+      if (!known_option) {
+        cerr << "ERROR: unknown option '" << argv[i] << "'" << endl;
         help(argv[0]);
       }
     } else if (pimpl->unnamed_args.size() > current_unnamed) {
@@ -178,19 +179,7 @@ bool cmd_options::parse_cmd(int argc, char **argv) const {
 }
 
 void cmd_options::help(char const *progname) const {
-  cerr << "usage: " << progname;
-  for (std::vector<option>::const_iterator i = pimpl->options.begin();
-       i != pimpl->options.end(); ++i) {
-    cerr << " --" << i->name;
-  }
-  if (handle_help) {
-    cerr << " --help";
-  }
-  for (std::vector<unnamed>::const_iterator i = pimpl->unnamed_args.begin();
-       i != pimpl->unnamed_args.end(); ++i) {
-    cerr << " <" << i->name << '>';
-  }
-  cerr << "\n\n";
+  cerr << "usage: " << progname << " [options] <subname>\n" << endl;
   for (std::vector<option>::const_iterator i = pimpl->options.begin();
        i != pimpl->options.end(); ++i) {
     cerr << "\t--" << i->name;
@@ -200,14 +189,14 @@ void cmd_options::help(char const *progname) const {
     if (i->short_name != '\0') {
       cerr << " (or -" << i->short_name << ')';
     }
-    cerr << "\t" << i->description << '\n';
+    cerr << "\t" << i->description << endl;
   }
   if (handle_help) {
     cerr << "\t--help (or -h)\tshow help information\n";
   }
   for (std::vector<unnamed>::const_iterator i = pimpl->unnamed_args.begin();
        i != pimpl->unnamed_args.end(); ++i) {
-    cerr << "\t<" << i->name << ">\t" << i->description << '\n';
+    cerr << "\t<" << i->name << ">\t" << i->description << endl;
   }
   exit = true;
 }

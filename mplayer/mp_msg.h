@@ -28,7 +28,7 @@ extern "C" {
 // defined in mplayer.c and mencoder.c
 extern int verbose;
 
-// verbosity elevel:
+// verbosity level:
 
 /* Only messages level MSGL_FATAL-MSGL_STATUS should be translated,
  * messages level MSGL_V and above should not be translated. */

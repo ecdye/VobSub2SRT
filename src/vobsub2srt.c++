@@ -1,6 +1,6 @@
 /*
  *  VobSub2SRT is a simple command line program to convert .idx/.sub subtitles
- *  into .srt text subtitles by using OCR (tesseract). See README.
+ *  into .srt text subtitles by using OCR (tesseract). See README.md.
  *
  *  Copyright (C) 2010-2016 Rüdiger Sonderfeld <ruediger@c-plusplus.de>
  *
@@ -18,14 +18,6 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// MPlayer stuff
-#include "mp_msg.h"  // mplayer message framework
-#include "spudec.h"
-#include "vobsub.h"
-
-// Tesseract OCR
-#include <unistd.h>
-
 #include <algorithm>
 #include <atomic>
 #include <cstdio>
@@ -35,11 +27,20 @@
 #include <thread>
 #include <vector>
 
-#include "tesseract/baseapi.h"
-using namespace std;
-
+// VobSub2SRT
 #include "cmd_options.h++"
 #include "langcodes.h++"
+
+// MPlayer
+#include "mp_msg.h"
+#include "spudec.h"
+#include "vobsub.h"
+
+// Tesseract
+#include <unistd.h>
+#include "tesseract/baseapi.h"
+
+using namespace std;
 
 typedef void *vob_t;
 typedef void *spu_t;
@@ -136,14 +137,12 @@ TessBaseAPI *init_tesseract(std::string tesseract_data_path,
     cerr << "Failed to initialize tesseract (OCR).\n";
     return NULL;
   }
-  if (not blacklist.empty()) {
+  if (!blacklist.empty()) {
     tess_base_api->SetVariable("tessedit_char_blacklist", blacklist.c_str());
   }
-  if (1) {
-    char dpi_string[255];
-    snprintf(dpi_string, 254, "%d", dpi);
-    tess_base_api->SetVariable("user_defined_dpi", dpi_string);
-  }
+  char dpi_string[255];
+  snprintf(dpi_string, 254, "%d", dpi);
+  tess_base_api->SetVariable("user_defined_dpi", dpi_string);
   return tess_base_api;
 }
 
@@ -156,21 +155,16 @@ void do_ocr(TessBaseAPI *tess_base_api, atomic<bool> *done,
       tess_base_api->TesseractRect(image_cpy, 1, stride, 0, 0, width, height);
   free(image_cpy);
 
-  if (not text) {
-    cerr << "ERROR: OCR failed for " << counter << '\n';
-    char const errormsg[] = "VobSub2SRT ERROR: OCR failure!";
-    // using raw memory is evil but that's the way Tesseract works
-    // If we switch to C++11 we can use unique_ptr.
-    text = new char[sizeof(errormsg)];
-    memcpy(text, errormsg, sizeof(errormsg));
+  if (!text) {
+    cerr << "ERROR: OCR failed for " << counter << endl;
   } else {
     size_t size = strlen(text);
     while (size > 0 and isspace(text[--size])) {
       text[size] = '\0';
     }
-  }
-  if (verb) {
-    cout << counter << " Text: " << text << endl;
+    if (verb) {
+      cout << counter << " Text: " << text << endl;
+    }
   }
   mut->lock();
   conv_subs->push_back(sub_text_t(counter, start_pts, end_pts, text));
@@ -210,11 +204,11 @@ int main(int argc, char **argv) {
      ************************************************************************************/
     cmd_options opts;
     opts.add_option("dump-images", dump_images,
-                    "dump subtitles as image files (<subname>-<number>.pgm).")
-        .add_option("verbose", verb, "extra verbosity")
-        .add_option("ifo", ifo_file,
-                    "name of the ifo file. default: tries to open "
-                    "<subname>.ifo. ifo file is optional!")
+                    "dump subtitles as image files (<subname>-<number>.pgm)")
+        .add_option("verbose", verb, "increase logging level")
+        .add_option(
+            "ifo", ifo_file,
+            "name of the ifo file (default: tries to open <subname>.ifo")
         .add_option("lang", lang, "language to select", 'l')
         .add_option("langlist", list_languages, "list languages and exit")
         .add_option("index", index, "subtitle index", 'i')
@@ -228,22 +222,22 @@ int main(int argc, char **argv) {
             "blacklist", blacklist,
             "Character blacklist to improve the OCR (e.g. \"|\\/`_~<>\")")
         .add_option("y-threshold", y_threshold,
-                    "Y (luminance) threshold below which colors treated as "
-                    "black (Default: 0)")
+                    "y (luminance) threshold below which colors treated as "
+                    "black (default: 0)")
         .add_option("min-width", min_width,
-                    "Minimum width in pixels to consider a subpicture for OCR "
-                    "(Default: 9)")
+                    "minimum width in pixels to consider a subpicture for OCR "
+                    "(default: 9)")
         .add_option("min-height", min_height,
-                    "Minimum height in pixels to consider a subpicture for OCR "
-                    "(Default: 1)")
-        .add_option("dpi", dpi, "DPI of the subtitle images (Default: 72)")
+                    "minimum height in pixels to consider a subpicture for OCR "
+                    "(default: 1)")
+        .add_option("dpi", dpi, "DPI of the subtitle images (default: 72)")
         .add_option("max-threads", max_threads,
-                    "Maximum number of threads to use to do the OCR, use 0 to "
-                    "autodetect the number of cores (Default: 0)")
+                    "maximum number of threads to use, use 0 to "
+                    "autodetect the number of cores (default: 0)")
         .add_unnamed(
             subname, "subname",
             "name of the subtitle files WITHOUT .idx/.sub ending! (REQUIRED)");
-    if (not opts.parse_cmd(argc, argv) or subname.empty()) {
+    if (!opts.parse_cmd(argc, argv) or subname.empty()) {
       return 1;
     }
   }
@@ -254,7 +248,7 @@ int main(int argc, char **argv) {
 
   // Set Y threshold from command-line arg only if given
   if (y_threshold) {
-    cout << "Using Y palette threshold: " << y_threshold << "\n";
+    cout << "Using Y palette threshold: " << y_threshold << endl;
   }
 
   // Open the sub/idx subtitles
@@ -262,8 +256,8 @@ int main(int argc, char **argv) {
   vob_t vob =
       vobsub_open(subname.c_str(), ifo_file.empty() ? 0x0 : ifo_file.c_str(), 1,
                   y_threshold, &spu);
-  if (not vob or vobsub_get_indexes_count(vob) == 0) {
-    cerr << "Couldn't open VobSub files '" << subname << ".idx/.sub'\n";
+  if (!vob or vobsub_get_indexes_count(vob) == 0) {
+    cerr << "Couldn't open VobSub files '" << subname << ".idx/.sub'" << endl;
     return 1;
   }
 
@@ -272,14 +266,14 @@ int main(int argc, char **argv) {
     cout << "Languages:\n";
     for (size_t i = 0; i < vobsub_get_indexes_count(vob); ++i) {
       char const *const id = vobsub_get_id(vob, i);
-      cout << i << ": " << (id ? id : "(no id)") << '\n';
+      cout << i << ": " << (id ? id : "(no id)") << endl;
     }
     return 0;
   }
 
   // Handle stream Ids and language
 
-  if (not lang.empty() and index >= 0) {
+  if (!lang.empty() and index >= 0) {
     cerr << "Setting both lang and index not supported.\n";
     return 1;
   }
@@ -287,7 +281,7 @@ int main(int argc, char **argv) {
   // default english
   char const *tess_lang =
       tess_lang_user.empty() ? "eng" : tess_lang_user.c_str();
-  if (not lang.empty()) {
+  if (!lang.empty()) {
     if (vobsub_set_from_lang(vob, (unsigned char *)lang.c_str()) < 0) {
       cerr << "No matching language for '" << lang
            << "' found! (Trying to use default)\n";
@@ -324,7 +318,7 @@ int main(int argc, char **argv) {
   // Open srt output file
   string const srt_filename = subname + ".srt";
   FILE *srtout = fopen(srt_filename.c_str(), "w");
-  if (not srtout) {
+  if (!srtout) {
     perror("could not open .srt file");
     return 1;
   }
@@ -367,7 +361,7 @@ int main(int argc, char **argv) {
         cerr << "WARNING: Image too small " << sub_counter
              << ", size: " << image_size << " bytes, " << width << "x" << height
              << " pixels, expected at least " << min_width << "x" << min_height
-             << "\n";
+             << endl;
         continue;
       }
 

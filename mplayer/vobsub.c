@@ -806,9 +806,7 @@ int vobsub_parse_ifo(void *this, const char *const name, unsigned int *palette,
   vobsub_t *vob = this;
   int res = -1;
   rar_stream_t *fd = rar_open(name, "rb");
-  if (fd == NULL) {
-    if (force) mp_msg(MSGT_VOBSUB, MSGL_WARN, "VobSub: Can't open IFO file\n");
-  } else {
+  if (fd != NULL) {
     // parse IFO header
     unsigned char block[0x800];
     const char *const ifo_magic = "DVDVIDEO-VTS";
