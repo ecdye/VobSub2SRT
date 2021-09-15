@@ -10,17 +10,18 @@
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef LANGCODES_HXX
 #define LANGCODES_HXX
 
-/// Converts ISO 639-1 language code (two letter) to ISO 639-3 language code (three letter)
+/// Converts ISO 639-1 language code (two letter) to ISO 639-3 language code
+/// (three letter)
 char const *iso639_1_to_639_3(char const *lang);
 
 #endif

@@ -13,7 +13,7 @@
  *
  * MPlayer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
@@ -28,25 +28,23 @@
 extern "C" {
 #endif
 
-struct RAR_archive_entry
-{
-  char           *Name;
-  unsigned long  PackSize;
-  unsigned long  UnpSize;
-  unsigned long  FileCRC;
-  unsigned long  FileTime;
-  unsigned char  UnpVer;
-  unsigned char  Method;
-  unsigned long  FileAttr;
+struct RAR_archive_entry {
+  char *Name;
+  unsigned long PackSize;
+  unsigned long UnpSize;
+  unsigned long FileCRC;
+  unsigned long FileTime;
+  unsigned char UnpVer;
+  unsigned char Method;
+  unsigned long FileAttr;
 };
 
-typedef struct  archivelist
-{
+typedef struct archivelist {
   struct RAR_archive_entry item;
-  struct archivelist         *next;
+  struct archivelist *next;
 } ArchiveList_struct;
 
-extern char* unrar_executable;
+extern char *unrar_executable;
 
 int unrar_exec_get(unsigned char **output, unsigned long *size,
                    const char *filename, const char *rarfile);

@@ -8,7 +8,7 @@
  *
  * MPlayer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
@@ -19,43 +19,53 @@
 #ifndef MPLAYER_SPUDEC_H
 #define MPLAYER_SPUDEC_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void spudec_heartbeat(void *self, unsigned int pts100);
-void spudec_assemble(void *self, unsigned char *packet, unsigned int len, int pts100);
-void spudec_draw(void *self, void (*draw_alpha)(int x0,int y0, int w,int h, unsigned char* src, unsigned char *srca, int stride));
-void spudec_draw_scaled(void *self, unsigned int dxs, unsigned int dys, void (*draw_alpha)(int x0,int y0, int w,int h, unsigned char* src, unsigned char *srca, int stride));
-int spudec_apply_palette_crop(void *self, uint32_t palette, int sx, int ex, int sy, int ey);
+void spudec_assemble(void *self, unsigned char *packet, unsigned int len,
+                     int pts100);
+void spudec_draw(void *self,
+                 void (*draw_alpha)(int x0, int y0, int w, int h,
+                                    unsigned char *src, unsigned char *srca,
+                                    int stride));
+void spudec_draw_scaled(void *self, unsigned int dxs, unsigned int dys,
+                        void (*draw_alpha)(int x0, int y0, int w, int h,
+                                           unsigned char *src,
+                                           unsigned char *srca, int stride));
+int spudec_apply_palette_crop(void *self, uint32_t palette, int sx, int ex,
+                              int sy, int ey);
 void spudec_update_palette(void *self, unsigned int *palette);
-void *spudec_new_scaled(unsigned int *palette, unsigned int frame_width, unsigned int frame_height, uint8_t *extradata, int extradata_len, unsigned int y_threshold);
+void *spudec_new_scaled(unsigned int *palette, unsigned int frame_width,
+                        unsigned int frame_height, uint8_t *extradata,
+                        int extradata_len, unsigned int y_threshold);
 void *spudec_new(unsigned int *palette, unsigned int y_threshold);
 void spudec_free(void *self);
-void spudec_reset(void *self);	// called after seek
-int spudec_visible(void *self); // check if spu is visible
-void spudec_set_font_factor(void * self, double factor); // sets the equivalent to ffactor
+void spudec_reset(void *self);   // called after seek
+int spudec_visible(void *self);  // check if spu is visible
+void spudec_set_font_factor(void *self,
+                            double factor);  // sets the equivalent to ffactor
 int spudec_changed(void *self);
-void spudec_calc_bbox(void *me, unsigned int dxs, unsigned int dys, unsigned int* bbox);
-void spudec_set_forced_subs_only(void * const self, const unsigned int flag);
+void spudec_calc_bbox(void *me, unsigned int dxs, unsigned int dys,
+                      unsigned int *bbox);
+void spudec_set_forced_subs_only(void *const self, const unsigned int flag);
 void spudec_set_paletted(void *self, const uint8_t *pal_img, int stride,
-                         const void *palette,
-                         int x, int y, int w, int h,
+                         const void *palette, int x, int y, int w, int h,
                          double pts, double endpts);
 struct spu_packet_t *spudec_packet_create(int x, int y, int w, int h);
-void spudec_packet_fill(struct spu_packet_t *packet,
-                        const uint8_t *pal_img, int pal_stride,
-                        const void *palette,
-                        int x, int y, int w, int h);
-void spudec_packet_send(void *spu, struct spu_packet_t *packet,
-                        double pts, double endpts);
+void spudec_packet_fill(struct spu_packet_t *packet, const uint8_t *pal_img,
+                        int pal_stride, const void *palette, int x, int y,
+                        int w, int h);
+void spudec_packet_send(void *spu, struct spu_packet_t *packet, double pts,
+                        double endpts);
 void spudec_packet_clear(struct spu_packet_t *packet);
-void spudec_get_data(void *self, const unsigned char **image, size_t *image_size, unsigned *width, unsigned *height,
+void spudec_get_data(void *self, const unsigned char **image,
+                     size_t *image_size, unsigned *width, unsigned *height,
                      unsigned *stride, unsigned *start_pts, unsigned *end_pts);
-
 
 #ifdef __cplusplus
 }

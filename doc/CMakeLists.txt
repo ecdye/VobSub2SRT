@@ -23,11 +23,11 @@ else()
   install(FILES ${CMAKE_BINARY_DIR}/doc/vobsub2srt.1.gz DESTINATION ${INSTALL_MAN_DIR})
 endif()
 
-#option(BASH_COMPLETION_PATH "Install the bash completion script to the given path.  Should be set to the value of `pkg-config --variable=completionsdir bash-completion` if available.")
+#option(BASH_COMPLETION_PATH "Install the bash completion script to the given path. Should be set to the value of `pkg-config --variable=completionsdir bash-completion` if available.")
 
 if(NOT BASH_COMPLETION_PATH)
   # Instead of calling pkg-config it should be possible to use
-  # find_package(bash-completions).  See the bash-completions README.
+  # find_package(bash-completions). See the bash-completions README.
   # But Debian/Ubuntu don't ship the cmake configs at the moment.
   # Therefore we fallback to pkg-config.
   find_program(PKG_CONFIG_EXECUTABLE NAMES pkg-config DOC "pkg-config executable")

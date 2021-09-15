@@ -8,7 +8,7 @@
  *
  * MPlayer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
@@ -25,11 +25,14 @@ extern "C" {
 
 extern int vobsub_id;
 
-void *vobsub_open(const char *subname, const char *const ifo, const int force, unsigned int y_threshold, void** spu);
+void *vobsub_open(const char *subname, const char *const ifo, const int force,
+                  unsigned int y_threshold, void **spu);
 void vobsub_reset(void *vob);
-int vobsub_parse_ifo(void* self, const char *const name, unsigned int *palette, unsigned int *width, unsigned int *height, int force, int sid, char *langid);
-int vobsub_get_packet(void *vobhandle, float pts,void** data, int* timestamp);
-int vobsub_get_next_packet(void *vobhandle, void** data, int* timestamp);
+int vobsub_parse_ifo(void *self, const char *const name, unsigned int *palette,
+                     unsigned int *width, unsigned int *height, int force,
+                     int sid, char *langid);
+int vobsub_get_packet(void *vobhandle, float pts, void **data, int *timestamp);
+int vobsub_get_next_packet(void *vobhandle, void **data, int *timestamp);
 void vobsub_close(void *self);
 unsigned int vobsub_get_indexes_count(void * /* vobhandle */);
 char *vobsub_get_id(void * /* vobhandle */, unsigned int /* index */);
@@ -44,8 +47,8 @@ unsigned int vobsub_palette_to_yuv(unsigned int pal);
 /// Convert rgb value to yuv.
 unsigned int vobsub_rgb_to_yuv(unsigned int rgb);
 
-int vobsub_set_from_lang(void *vobhandle, unsigned char * lang);
-void vobsub_seek(void * vobhandle, float pts);
+int vobsub_set_from_lang(void *vobhandle, unsigned char *lang);
+void vobsub_seek(void *vobhandle, float pts);
 
 #ifdef __cplusplus
 }
