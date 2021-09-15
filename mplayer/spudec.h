@@ -19,7 +19,6 @@
 #ifndef MPLAYER_SPUDEC_H
 #define MPLAYER_SPUDEC_H
 
-//#include "libvo/video_out.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -39,7 +38,6 @@ void spudec_free(void *self);
 void spudec_reset(void *self);	// called after seek
 int spudec_visible(void *self); // check if spu is visible
 void spudec_set_font_factor(void * self, double factor); // sets the equivalent to ffactor
-//void spudec_set_hw_spu(void *self, const vo_functions_t *hw_spu);
 int spudec_changed(void *self);
 void spudec_calc_bbox(void *me, unsigned int dxs, unsigned int dys, unsigned int* bbox);
 void spudec_set_forced_subs_only(void * const self, const unsigned int flag);
@@ -47,9 +45,17 @@ void spudec_set_paletted(void *self, const uint8_t *pal_img, int stride,
                          const void *palette,
                          int x, int y, int w, int h,
                          double pts, double endpts);
-/// call this after spudec_assemble and spudec_heartbeat to get the packet data
+struct spu_packet_t *spudec_packet_create(int x, int y, int w, int h);
+void spudec_packet_fill(struct spu_packet_t *packet,
+                        const uint8_t *pal_img, int pal_stride,
+                        const void *palette,
+                        int x, int y, int w, int h);
+void spudec_packet_send(void *spu, struct spu_packet_t *packet,
+                        double pts, double endpts);
+void spudec_packet_clear(struct spu_packet_t *packet);
 void spudec_get_data(void *self, const unsigned char **image, size_t *image_size, unsigned *width, unsigned *height,
                      unsigned *stride, unsigned *start_pts, unsigned *end_pts);
+
 
 #ifdef __cplusplus
 }

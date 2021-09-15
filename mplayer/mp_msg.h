@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#include <stdarg.h>
+
 // defined in mplayer.c and mencoder.c
 extern int verbose;
 
@@ -52,8 +54,8 @@ extern int verbose;
 #define MSGT_CPLAYER 1       // console player (mplayer.c)
 #define MSGT_GPLAYER 2       // gui player
 
-#define MSGT_VO 3	       // libvo
-#define MSGT_AO 4	       // libao
+#define MSGT_VO 3       // libvo
+#define MSGT_AO 4       // libao
 
 #define MSGT_DEMUXER 5    // demuxer.c (general stuff)
 #define MSGT_DS 6         // demux stream (add/read packet etc)
@@ -68,26 +70,26 @@ extern int verbose;
 #define MSGT_DECAUDIO 12  // av decoder
 #define MSGT_DECVIDEO 13
 
-#define MSGT_SEEK 14	// seeking code
-#define MSGT_WIN32 15	// win32 dll stuff
-#define MSGT_OPEN 16	// open.c (stream opening)
-#define MSGT_DVD 17	// open.c (DVD init/read/seek)
+#define MSGT_SEEK 14    // seeking code
+#define MSGT_WIN32 15   // win32 dll stuff
+#define MSGT_OPEN 16    // open.c (stream opening)
+#define MSGT_DVD 17     // open.c (DVD init/read/seek)
 
-#define MSGT_PARSEES 18	// parse_es.c (mpeg stream parser)
-#define MSGT_LIRC 19	// lirc_mp.c and input lirc driver
+#define MSGT_PARSEES 18 // parse_es.c (mpeg stream parser)
+#define MSGT_LIRC 19    // lirc_mp.c and input lirc driver
 
 #define MSGT_STREAM 20  // stream.c
-#define MSGT_CACHE 21 	// cache2.c
+#define MSGT_CACHE 21   // cache2.c
 
 #define MSGT_MENCODER 22
 
-#define MSGT_XACODEC 23	// XAnim codecs
+#define MSGT_XACODEC 23 // XAnim codecs
 
-#define MSGT_TV 24	// TV input subsystem
+#define MSGT_TV 24      // TV input subsystem
 
-#define MSGT_OSDEP 25	// OS-dependent parts
+#define MSGT_OSDEP 25  // OS-dependent parts
 
-#define MSGT_SPUDEC 26	// spudec.c
+#define MSGT_SPUDEC 26 // spudec.c
 
 #define MSGT_PLAYTREE 27    // Playtree handeling (playtree.c, playtreeparser.c)
 
@@ -142,23 +144,16 @@ extern int mp_msg_level_all;
 void mp_msg_init(void);
 int mp_msg_test(int mod, int lev);
 
-//#include "config.h" // R: not needed
-
+void mp_msg_va(int mod, int lev, const char *format, va_list va);
 #ifdef __GNUC__
 void mp_msg(int mod, int lev, const char *format, ... ) __attribute__ ((format (printf, 3, 4)));
-#if 0 // R: not needed and args... doesn't work with -ansi
-#   ifdef MP_DEBUG
-#      define mp_dbg(mod,lev, args... ) mp_msg(mod, lev, ## args )
-#   else
-#      define mp_dbg(mod,lev, args... ) /* only useful for developers */
-#   endif
-#endif
 #else // not GNU C
 void mp_msg(int mod, int lev, const char *format, ... );
 #   ifdef MP_DEBUG
 #      define mp_dbg(mod,lev, ... ) mp_msg(mod, lev, __VA_ARGS__)
 #   else
-#      define mp_dbg(mod,lev, ... ) /* only useful for developers */
+       // only useful for developers, disable but check syntax
+#      define mp_dbg(mod,lev, ... ) do { if (0) mp_msg(mod, lev, __VA_ARGS__); } while (0)
 #   endif
 #endif /* __GNUC__ */
 

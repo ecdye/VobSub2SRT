@@ -259,7 +259,7 @@ int main(int argc, char **argv) {
   // default english
   char const *tess_lang = tess_lang_user.empty() ? "eng" : tess_lang_user.c_str();
   if(not lang.empty()) {
-    if(vobsub_set_from_lang(vob, lang.c_str()) < 0) {
+    if(vobsub_set_from_lang(vob, (unsigned char *)lang.c_str()) < 0) {
       cerr << "No matching language for '" << lang << "' found! (Trying to use default)\n";
     }
     else if(tess_lang_user.empty()) {
