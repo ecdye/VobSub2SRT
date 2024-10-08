@@ -38,6 +38,7 @@
 
 // Tesseract
 #include <unistd.h>
+
 #include "tesseract/baseapi.h"
 
 using namespace std;
@@ -183,6 +184,7 @@ int main(int argc, char **argv) {
   bool dump_images = false;
   bool verb = false;
   bool list_languages = false;
+  bool dumb = false;
   std::string ifo_file;
   std::string subname;
   std::string lang;
@@ -211,6 +213,7 @@ int main(int argc, char **argv) {
             "name of the ifo file (default: tries to open <subname>.ifo")
         .add_option("lang", lang, "language to select", 'l')
         .add_option("langlist", list_languages, "list languages and exit")
+        .add_option("dumb", dumb, "use forced next timestamp as end_pts")
         .add_option("index", index, "subtitle index", 'i')
         .add_option("tesseract-lang", tess_lang_user,
                     "set tesseract language (Default: auto detect)")
@@ -335,7 +338,7 @@ int main(int argc, char **argv) {
   unsigned sub_counter = 1;
 
   vector<sub_text_t> conv_subs;
-  conv_subs.reserve(200);  // TODO better estimate
+  conv_subs.reserve(4096);  // TODO better estimate
   mutex mut;
 
   while ((len = vobsub_get_next_packet(vob, &packet, &timestamp)) > 0) {
@@ -444,7 +447,7 @@ int main(int argc, char **argv) {
 
   // write the file, fixing end_pts when needed
   for (unsigned i = 0; i < conv_subs.size(); ++i) {
-    if (conv_subs[i].end_pts == UINT_MAX && i + 1 < conv_subs.size())
+    if (conv_subs[i].end_pts == UINT_MAX || (dumb && i + 1 < conv_subs.size()))
       conv_subs[i].end_pts = conv_subs[i + 1].start_pts;
 
     fprintf(srtout, "%u\n%s --> %s\n%s\n\n", conv_subs[i].counter,
